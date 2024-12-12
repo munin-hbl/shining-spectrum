@@ -1,11 +1,19 @@
 ---
-import Welcome from '../components/Welcome.astro';
-import Layout from '../layouts/Layout.astro';
+import { AppConfig } from '@/utils/AppConfig';
+import Base from '@/layouts/Base.astro';
+import Hero from '@/components/Hero.astro';
+import LatestPosts from '@/components/LatestPosts.astro';
+import { sortPostsByDate } from '@/utils/data.util';
 
-// Welcome to Astro! Wondering what to do next? Check out the Astro documentation at https://docs.astro.build
-// Don't want to use any of this? Delete everything in this file, the `assets`, `components`, and `layouts` directories, and start fresh.
+const { title } = AppConfig;
+const { description } = AppConfig;
+
+const allPosts = await Astro.glob('./posts/*.md');
+allPosts.sort(sortPostsByDate);
+const latestPosts = allPosts.slice(0, 3);
 ---
 
-<Layout>
-	<Welcome />
-</Layout>
+<Base head={{ title, description }}>
+	<Hero />
+	<LatestPosts posts={latestPosts} />
+</Base>
